@@ -1,5 +1,26 @@
 using TutorialsForDevelopers
 using Documenter
+using Literate
+
+repo_src = joinpath(@__DIR__,"..","src")
+pages_dir = joinpath(@__DIR__,"src","pages")
+Sys.rm(pages_dir;recursive=true,force=true)
+
+pages = ["Introduction"=>"index.md"]
+
+for (i,(file_jl,title)) in enumerate(TutorialsForDevelopers.files)
+
+  file, = splitext(file_jl)
+  file_md = file * ".md"
+  tutorial_title = "# # Tutorial $i: $title"
+  
+  Literate.markdown(
+    joinpath(repo_src,file_jl),
+    pages_dir; name=file, preprocess = content -> string(tutorial_title,"\n",content))
+
+  push!(pages,"$i $title"=>joinpath("pages",file_md))
+
+end
 
 makedocs(;
     modules=[TutorialsForDevelopers],
@@ -11,9 +32,7 @@ makedocs(;
         canonical="https://gridap.github.io/TutorialsForDevelopers",
         assets=String[],
     ),
-    pages=[
-        "Home" => "index.md",
-    ],
+    pages=pages,
 )
 
 deploydocs(;

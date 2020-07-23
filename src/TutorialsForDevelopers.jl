@@ -1,5 +1,7 @@
 module TutorialsForDevelopers
 
-# Write your package code here.
+files = [
+ "arrays.jl"=>"Working with arrays",
+]
 
 end
